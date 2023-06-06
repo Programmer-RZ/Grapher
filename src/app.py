@@ -13,8 +13,8 @@ class App(ctk.CTk):
         self.geometry("1200x500")
 
         # configure columns and rows
-        self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
 
         self.expressionplotter = ExpressionPlotter(self)
 

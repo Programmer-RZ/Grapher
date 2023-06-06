@@ -30,11 +30,13 @@ class ExpressionPlotter:
         self.xmax = 100
 
         self.ymin = 0
-        self.ymax = 200
+        self.ymax = 1000
+
+
+        self.haveGrid = True
 
         self.fig = Figure(figsize = (10, 5), dpi=100)
         self.ax1 = self.fig.add_subplot(1, 1, 1)
-        self.ax1.grid()
 
         self.updateplot(self.expression)
 
@@ -52,9 +54,10 @@ class ExpressionPlotter:
 
         self.ax1.set_ylim(self.ymin, self.ymax)
         self.ax1.set_xlim(self.xmin, self.xmax)
-
-        self.ax1.grid()
         self.ax1.plot(self.x, self.y)
+
+        if self.haveGrid:
+            self.ax1.grid()
 
         self.fig.canvas.draw()
 

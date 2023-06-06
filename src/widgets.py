@@ -6,10 +6,10 @@ class WidgetFrame(ctk.CTkFrame):
         super().__init__(window)
 
         self.graphWidgetFrame = GraphWidgetFrame(self, window)
-        self.graphWidgetFrame.grid(row=0, column=0, padx=10, pady=10)
+        self.graphWidgetFrame.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
 
         self.appearanceWidgetFrame = AppearanceWidgetFrame(self, window)
-        self.appearanceWidgetFrame.grid(row=1, column=0, padx=10, pady=10)
+        self.appearanceWidgetFrame.grid(row=1, column=0, padx=10, pady=10, sticky="EWNS")
 
 class GraphWidgetFrame(ctk.CTkFrame):
     def __init__(self, window, MAIN_WINDOW):
@@ -53,7 +53,7 @@ class GraphWidgets():
 
         # left most x value
         self.xmin_label = ctk.CTkButton(frame, 
-                                       text=f"Edit right X",
+                                       text=f"Left X",
                                        command=self.editXmin,
                                        width=100,
                                        border_width=3,
@@ -61,7 +61,7 @@ class GraphWidgets():
         self.xmin_label.grid(row=1, padx=10)
 
         self.xmin_spinbox = FloatSpinbox(frame, 
-                                            width=150, step_size=10, 
+                                            width=150, step_size=100, 
                                             command=lambda : self.setXmin(self.xmin_spinbox)
                                             )
         self.xmin_spinbox.set(self.plotter.xmin)
@@ -72,7 +72,7 @@ class GraphWidgets():
 
         # right most x value
         self.xmax_label = ctk.CTkButton(frame, 
-                                       text=f"Edit left X",
+                                       text=f"Right X",
                                        width=100,
                                        command=self.editXmax,
                                        border_width=3,
@@ -80,11 +80,49 @@ class GraphWidgets():
         self.xmax_label.grid(row=2, padx=10, pady=10)
 
         self.xmax_spinbox = FloatSpinbox(frame, 
-                                            width=150, step_size=10, 
+                                            width=150, step_size=100, 
                                             command=lambda : self.setXmax(self.xmax_spinbox)
                                             )
         self.xmax_spinbox.set(self.plotter.xmax)
         self.xmax_spinbox.grid(row=2, column=1, padx=10, pady=10)
+
+
+
+
+        # bottom most y value
+        self.ymin_label = ctk.CTkButton(frame, 
+                                       text=f"Bottom Y",
+                                       width=100,
+                                       command=self.editYmin,
+                                       border_width=3,
+                                       )
+        self.ymin_label.grid(row=3, padx=10)
+
+        self.ymin_spinbox = FloatSpinbox(frame, 
+                                            width=150, step_size=1000, 
+                                            command=lambda : self.setYmin(self.ymin_spinbox)
+                                            )
+        self.ymin_spinbox.set(self.plotter.ymin)
+        self.ymin_spinbox.grid(row=3, column=1, padx=10)
+
+
+
+
+        # up most y value
+        self.ymax_label = ctk.CTkButton(frame, 
+                                       text=f"Up Y",
+                                       width=100,
+                                       command=self.editYmax,
+                                       border_width=3,
+                                       )
+        self.ymax_label.grid(row=4, padx=10, pady=10)
+
+        self.ymax_spinbox = FloatSpinbox(frame, 
+                                            width=150, step_size=1000, 
+                                            command=lambda : self.setYmax(self.ymax_spinbox)
+                                            )
+        self.ymax_spinbox.set(self.plotter.ymax)
+        self.ymax_spinbox.grid(row=4, column=1, padx=10, pady=10)
 
 
 
@@ -95,19 +133,62 @@ class GraphWidgets():
     def setXmax(self, xmax):
         self.plotter.xmax = xmax.get()
         self.plotter.updateplot(self.plotter.expression)
+    def setYmin(self, ymin):
+        self.plotter.ymin = ymin.get()
+        self.plotter.updateplot(self.plotter.expression)
+    def setYmax(self, ymax):
+        self.plotter.ymax = ymax.get()
+        self.plotter.updateplot(self.plotter.expression)
 
 
 
+    def editYmin(self):
+        dialog = ctk.CTkInputDialog(
+            text=f"Type in a value.", 
+            title="Edit bottom Y value"
+        )
+
+        try:
+            new_ymin = int(dialog.get_input())
+        except ValueError:
+            return
+        except TypeError:
+            return
+
+        self.plotter.ymin = new_ymin
+        self.plotter.updateplot(self.plotter.expression)
+
+        self.ymin_spinbox.set(self.plotter.ymin)
+
+    def editYmax(self):
+        dialog = ctk.CTkInputDialog(
+            text=f"Type in a value.", 
+            title="Edit up Y value"
+        )
+
+        try:
+            new_ymax = int(dialog.get_input())
+        except ValueError:
+            return
+        except TypeError:
+            return
+
+        self.plotter.ymax = new_ymax
+        self.plotter.updateplot(self.plotter.expression)
+
+        self.ymax_spinbox.set(self.plotter.ymax)
 
     def editXmin(self):
         dialog = ctk.CTkInputDialog(
-            text=f"Type in a X value.", 
+            text=f"Type in a value.", 
             title="Edit left X value"
         )
 
         try:
             new_xmin = int(dialog.get_input())
         except ValueError:
+            return
+        except TypeError:
             return
 
         self.plotter.xmin = new_xmin
@@ -116,13 +197,15 @@ class GraphWidgets():
         self.xmin_spinbox.set(self.plotter.xmin)
     def editXmax(self):
         dialog = ctk.CTkInputDialog(
-            text=f"Type in a X value.", 
+            text=f"Type in a value.", 
             title="Edit right X value"
         )
 
         try:
             new_xmax = int(dialog.get_input())
         except ValueError:
+            return
+        except TypeError:
             return
 
         self.plotter.xmax = new_xmax
@@ -168,5 +251,27 @@ class GraphWidgets():
         self.label.configure(text=f"y = {new_expression}")
 
 class AppearanceWidgets:
-    def __init__(self, window, plotter):
-        pass
+    def __init__(self, frame, plotter):
+        self.plotter = plotter
+
+        self.isGrid = ctk.StringVar(value="on")
+        self.gridCheckButton = ctk.CTkCheckBox(
+            frame, 
+            text="Grid", 
+            command=self.setGrid,
+            variable=self.isGrid,
+            onvalue="on",
+            offvalue="off"
+        )
+        self.gridCheckButton.grid(row=0, column=0, padx=10, pady=10)
+
+
+
+        self.appearance_mode = ctk.CTkOptionMenu(frame, values=["System", "Dark", "Light"])
+        self.appearance_mode.grid(row=0, column=1, padx=10, pady=10)
+
+    def setGrid(self):
+        self.plotter.haveGrid = True if self.isGrid.get()=="on" else False
+        self.plotter.updateplot(self.plotter.expression)
+    def setAppearance(self, choice):
+        ctk.set_appearance_mode(choice.lower())
