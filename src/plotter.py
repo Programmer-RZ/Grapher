@@ -12,7 +12,7 @@ class GraphFrame(ctk.CTkFrame):
 
         self.canvas = FigureCanvasTkAgg(fig, master=self)  
         self.canvas.draw()
-        self.canvas.get_tk_widget().pack()
+        self.canvas.get_tk_widget().pack(padx=20, pady=20)
 
         self.toolbar = NavigationToolbar2Tk(self.canvas, self)
         self.toolbar.update()
@@ -26,10 +26,11 @@ class ExpressionPlotter:
         self.y = []
         self.expression = "x"
 
-        self.xmin_limits = [-300, 0]
-        self.xmax_limits = [100, 300]
         self.xmin = -100
         self.xmax = 100
+
+        self.ymin = 0
+        self.ymax = 200
 
         self.fig = Figure(figsize = (10, 5), dpi=100)
         self.ax1 = self.fig.add_subplot(1, 1, 1)
@@ -38,7 +39,7 @@ class ExpressionPlotter:
         self.updateplot(self.expression)
 
         self.graphframe = GraphFrame(window, self.fig)
-        self.graphframe.grid(row=0, column=1, pady=20)
+        self.graphframe.grid(row=0, column=1, padx=20, pady=20, sticky="EWNS")
 
     def updateplot(self, expression):
         self.x = arange(self.xmin, self.xmax, 1)
@@ -48,6 +49,10 @@ class ExpressionPlotter:
         self.fig.clear()
 
         self.ax1 = self.fig.add_subplot(1, 1, 1)
+
+        self.ax1.set_ylim(self.ymin, self.ymax)
+        self.ax1.set_xlim(self.xmin, self.xmax)
+
         self.ax1.grid()
         self.ax1.plot(self.x, self.y)
 
@@ -57,8 +62,8 @@ class ExpressionPlotter:
         try:
             x = self.x
             self.y = eval(expression)
+            self.expression = expression
         except SyntaxError:
-            # not a plausible input
             pass
 
 

@@ -1,20 +1,32 @@
 import customtkinter as ctk
-import customwidgets as cw
+from customwidgets.spinbox import FloatSpinbox
 
 class WidgetFrame(ctk.CTkFrame):
     def __init__(self, window):
         super().__init__(window)
 
-        self.state = "expressionwidget"
+        self.graphWidgetFrame = GraphWidgetFrame(self, window)
+        self.graphWidgetFrame.grid(row=0, column=0, padx=10, pady=10)
 
-        if self.state == "expressionwidget":
-            self.equationWidget = ExpressionWidgets(self, window.expressionplotter)
+        self.appearanceWidgetFrame = AppearanceWidgetFrame(self, window)
+        self.appearanceWidgetFrame.grid(row=1, column=0, padx=10, pady=10)
 
-class ExpressionWidgets():
+class GraphWidgetFrame(ctk.CTkFrame):
+    def __init__(self, window, MAIN_WINDOW):
+        super().__init__(window)
+        self.graphWidget = GraphWidgets(self, MAIN_WINDOW.expressionplotter)
+
+class AppearanceWidgetFrame(ctk.CTkFrame):
+    def __init__(self, window, MAIN_WINDOW):
+        super().__init__(window)
+        self.appearanceWidget = AppearanceWidgets(self, MAIN_WINDOW.expressionplotter)
+
+
+
+class GraphWidgets():
     def __init__(self, frame, plotter):
         self.plotter = plotter
-
-
+        
 
         self.text_frame = ctk.CTkFrame(master=frame)
         self.label = ctk.CTkLabel(
@@ -38,44 +50,88 @@ class ExpressionWidgets():
 
 
 
-        # edit graph values
-        self.xmin_label = ctk.CTkLabel(frame, 
-                                       text=f"Min X = {self.plotter.xmin}"
+
+        # left most x value
+        self.xmin_label = ctk.CTkButton(frame, 
+                                       text=f"Edit right X",
+                                       command=self.editXmin,
+                                       width=100,
+                                       border_width=3,
                                        )
         self.xmin_label.grid(row=1, padx=10)
 
-        self.xmin_spinbox = cw.FloatSpinbox(frame, 
-                                            min=self.plotter.xmin_limits[0],
-                                            max=self.plotter.xmin_limits[1],
+        self.xmin_spinbox = FloatSpinbox(frame, 
                                             width=150, step_size=10, 
-                                            command=lambda : self.editXmin(self.xmin_spinbox)
+                                            command=lambda : self.setXmin(self.xmin_spinbox)
                                             )
         self.xmin_spinbox.set(self.plotter.xmin)
-        self.xmin_spinbox.grid(row=1, column=1)
+        self.xmin_spinbox.grid(row=1, column=1, padx=10)
 
 
-        self.xmax_label = ctk.CTkLabel(frame, 
-                                       text=f"Max X = {self.plotter.xmax}"
+
+
+        # right most x value
+        self.xmax_label = ctk.CTkButton(frame, 
+                                       text=f"Edit left X",
+                                       width=100,
+                                       command=self.editXmax,
+                                       border_width=3,
                                        )
-        self.xmax_label.grid(row=2, padx=10)
+        self.xmax_label.grid(row=2, padx=10, pady=10)
 
-        self.xmax_spinbox = cw.FloatSpinbox(frame, 
-                                            min=self.plotter.xmax_limits[0],
-                                            max=self.plotter.xmax_limits[1],
+        self.xmax_spinbox = FloatSpinbox(frame, 
                                             width=150, step_size=10, 
-                                            command=lambda : self.editXmax(self.xmax_spinbox)
+                                            command=lambda : self.setXmax(self.xmax_spinbox)
                                             )
         self.xmax_spinbox.set(self.plotter.xmax)
-        self.xmax_spinbox.grid(row=2, column=1)
+        self.xmax_spinbox.grid(row=2, column=1, padx=10, pady=10)
 
-    def editXmin(self, xmin):
+
+
+
+    def setXmin(self, xmin):
         self.plotter.xmin = xmin.get()
         self.plotter.updateplot(self.plotter.expression)
-        self.xmin_label.configure(text=f"Min X = {self.plotter.xmin}")
-    def editXmax(self, xmax):
+    def setXmax(self, xmax):
         self.plotter.xmax = xmax.get()
         self.plotter.updateplot(self.plotter.expression)
-        self.xmax_label.configure(text=f"Max X = {self.plotter.xmax}")
+
+
+
+
+    def editXmin(self):
+        dialog = ctk.CTkInputDialog(
+            text=f"Type in a X value.", 
+            title="Edit left X value"
+        )
+
+        try:
+            new_xmin = int(dialog.get_input())
+        except ValueError:
+            return
+
+        self.plotter.xmin = new_xmin
+        self.plotter.updateplot(self.plotter.expression)
+
+        self.xmin_spinbox.set(self.plotter.xmin)
+    def editXmax(self):
+        dialog = ctk.CTkInputDialog(
+            text=f"Type in a X value.", 
+            title="Edit right X value"
+        )
+
+        try:
+            new_xmax = int(dialog.get_input())
+        except ValueError:
+            return
+
+        self.plotter.xmax = new_xmax
+        self.plotter.updateplot(self.plotter.expression)
+
+        self.xmax_spinbox.set(self.plotter.xmax)
+
+
+
 
     def editEquation(self):
         dialog = ctk.CTkInputDialog(
@@ -111,4 +167,6 @@ class ExpressionWidgets():
         self.plotter.updateplot(new_expression)
         self.label.configure(text=f"y = {new_expression}")
 
-        
+class AppearanceWidgets:
+    def __init__(self, window, plotter):
+        pass
