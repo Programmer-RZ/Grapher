@@ -48,7 +48,6 @@ class GraphValuesWidgets():
             text=f"Edit left X",
             command=self.editXmin,
             width=100,
-            border_width=3,
         )
         self.valueButton.grid(row=1, column=0, padx=10, pady=10)
 
@@ -195,7 +194,6 @@ class ExpressionWidgets():
             master=frame, 
             text="Edit expression", 
             command=self.editEquation,
-            border_width=3
         )
         self.button.grid(row=0, column=1, padx=10)
 

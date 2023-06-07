@@ -6,7 +6,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        ctk.set_appearance_mode("system")
+        ctk.set_appearance_mode("light")
         ctk.ThemeManager.load_theme("blue")
 
         self.title("Grapher")
