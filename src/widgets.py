@@ -5,126 +5,86 @@ class WidgetFrame(ctk.CTkFrame):
     def __init__(self, window):
         super().__init__(window)
 
-        self.graphWidgetFrame = GraphWidgetFrame(self, window)
-        self.graphWidgetFrame.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
+        self.exprWidgetFrame = ExpressionWidgetFrame(self, window)
+        self.exprWidgetFrame.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
+
+        self.graphValuesFrame = GraphValuesWidgetFrame(self, window)
+        self.graphValuesFrame.grid(row=1, column=0, padx=10, pady=10, sticky="EWNS")
 
         self.appearanceWidgetFrame = AppearanceWidgetFrame(self, window)
-        self.appearanceWidgetFrame.grid(row=1, column=0, padx=10, pady=10, sticky="EWNS")
+        self.appearanceWidgetFrame.grid(row=2, column=0, padx=10, pady=10, sticky="EWNS")
 
-class GraphWidgetFrame(ctk.CTkFrame):
+class ExpressionWidgetFrame(ctk.CTkFrame):
     def __init__(self, window, MAIN_WINDOW):
         super().__init__(window)
-        self.graphWidget = GraphWidgets(self, MAIN_WINDOW.expressionplotter)
+        self.graphWidget = ExpressionWidgets(self, MAIN_WINDOW.expressionplotter)
 
 class AppearanceWidgetFrame(ctk.CTkFrame):
     def __init__(self, window, MAIN_WINDOW):
         super().__init__(window)
         self.appearanceWidget = AppearanceWidgets(self, MAIN_WINDOW.expressionplotter)
 
+class GraphValuesWidgetFrame(ctk.CTkFrame):
+    def __init__(self, window, MAIN_WINDOW):
+        super().__init__(window)
+        self.graphvalueWIdget = GraphValuesWidgets(self, MAIN_WINDOW.expressionplotter)
 
-
-class GraphWidgets():
+class GraphValuesWidgets():
     def __init__(self, frame, plotter):
         self.plotter = plotter
+
+        self.editValue = ctk.CTkOptionMenu(frame, values=
+                                           ["Left X", "Right X", "Bottom Y", "Top Y"],
+                                           command=self.setEditValue)
+        self.editValue.grid(row=0, column=0, padx=10, pady=10)
+
         
+        self.valueLabel = ctk.CTkLabel(master=frame, text="Editing value Left X")
+        self.valueLabel.grid(row=0, column=1, padx=10)
 
-        self.text_frame = ctk.CTkFrame(master=frame)
-        self.label = ctk.CTkLabel(
-            master=self.text_frame,
-            text=f"y = {plotter.expression}",
-            font=ctk.CTkFont(size=20, weight="bold")
+        # default value
+        self.valueButton = ctk.CTkButton(
+            frame,
+            text=f"Edit left X",
+            command=self.editXmin,
+            width=100,
+            border_width=3,
         )
-        self.label.pack(padx=10, pady=10)
-        self.text_frame.grid(row=0, padx=10, pady=20)
+        self.valueButton.grid(row=1, column=0, padx=10, pady=10)
 
-
-
-        # edit expression
-        self.button = ctk.CTkButton(
-            master=frame, 
-            text="Edit expression", 
-            command=self.editEquation,
-            border_width=3
-        )
-        self.button.grid(row=0, column=1)
-
-
-
-
-        # left most x value
-        self.xmin_label = ctk.CTkButton(frame, 
-                                       text=f"Left X",
-                                       command=self.editXmin,
-                                       width=100,
-                                       border_width=3,
-                                       )
-        self.xmin_label.grid(row=1, padx=10)
-
-        self.xmin_spinbox = FloatSpinbox(frame, 
+        # default value
+        self.value_spinbox = FloatSpinbox(frame, 
                                             width=150, step_size=100, 
-                                            command=lambda : self.setXmin(self.xmin_spinbox)
+                                            command=lambda : self.setXmin(self.value_spinbox)
                                             )
-        self.xmin_spinbox.set(self.plotter.xmin)
-        self.xmin_spinbox.grid(row=1, column=1, padx=10)
+        self.value_spinbox.set(self.plotter.xmin)
+        self.value_spinbox.grid(row=1, column=1, padx=10, pady=10)
 
 
+    def setEditValue(self, choice):
+        if choice == "Left X":
+            self.valueButton.configure(text="Edit left X", command=self.editXmin)
 
+            self.value_spinbox.command = lambda : self.setXmin(self.value_spinbox)
+            self.value_spinbox.set(self.plotter.xmin)
+            
+        elif choice == "Right X":
+            self.valueButton.configure(text="Edit right X", command=self.editXmax)
 
-        # right most x value
-        self.xmax_label = ctk.CTkButton(frame, 
-                                       text=f"Right X",
-                                       width=100,
-                                       command=self.editXmax,
-                                       border_width=3,
-                                       )
-        self.xmax_label.grid(row=2, padx=10, pady=10)
+            self.value_spinbox.command = lambda : self.setXmax(self.value_spinbox)
+            self.value_spinbox.set(self.plotter.xmax)
 
-        self.xmax_spinbox = FloatSpinbox(frame, 
-                                            width=150, step_size=100, 
-                                            command=lambda : self.setXmax(self.xmax_spinbox)
-                                            )
-        self.xmax_spinbox.set(self.plotter.xmax)
-        self.xmax_spinbox.grid(row=2, column=1, padx=10, pady=10)
+        elif choice == "Bottom Y":
+            self.valueButton.configure(text="Edit bottom Y", command=self.editYmin)
 
+            self.value_spinbox.command = lambda : self.setYmin(self.value_spinbox)
+            self.value_spinbox.set(self.plotter.ymin)
 
+        elif choice == "Up Y":
+            self.valueButton.configure(text="Edit up Y", command=self.editYmax)
 
-
-        # bottom most y value
-        self.ymin_label = ctk.CTkButton(frame, 
-                                       text=f"Bottom Y",
-                                       width=100,
-                                       command=self.editYmin,
-                                       border_width=3,
-                                       )
-        self.ymin_label.grid(row=3, padx=10)
-
-        self.ymin_spinbox = FloatSpinbox(frame, 
-                                            width=150, step_size=1000, 
-                                            command=lambda : self.setYmin(self.ymin_spinbox)
-                                            )
-        self.ymin_spinbox.set(self.plotter.ymin)
-        self.ymin_spinbox.grid(row=3, column=1, padx=10)
-
-
-
-
-        # up most y value
-        self.ymax_label = ctk.CTkButton(frame, 
-                                       text=f"Up Y",
-                                       width=100,
-                                       command=self.editYmax,
-                                       border_width=3,
-                                       )
-        self.ymax_label.grid(row=4, padx=10, pady=10)
-
-        self.ymax_spinbox = FloatSpinbox(frame, 
-                                            width=150, step_size=1000, 
-                                            command=lambda : self.setYmax(self.ymax_spinbox)
-                                            )
-        self.ymax_spinbox.set(self.plotter.ymax)
-        self.ymax_spinbox.grid(row=4, column=1, padx=10, pady=10)
-
-
+            self.value_spinbox.command = lambda : self.setYmax(self.value_spinbox)
+            self.value_spinbox.set(self.plotter.ymax)
 
 
     def setXmin(self, xmin):
@@ -158,7 +118,7 @@ class GraphWidgets():
         self.plotter.ymin = new_ymin
         self.plotter.updateplot(self.plotter.expression)
 
-        self.ymin_spinbox.set(self.plotter.ymin)
+        self.value_spinbox.set(self.plotter.ymin)
 
     def editYmax(self):
         dialog = ctk.CTkInputDialog(
@@ -176,7 +136,7 @@ class GraphWidgets():
         self.plotter.ymax = new_ymax
         self.plotter.updateplot(self.plotter.expression)
 
-        self.ymax_spinbox.set(self.plotter.ymax)
+        self.value_spinbox.set(self.plotter.ymax)
 
     def editXmin(self):
         dialog = ctk.CTkInputDialog(
@@ -194,7 +154,7 @@ class GraphWidgets():
         self.plotter.xmin = new_xmin
         self.plotter.updateplot(self.plotter.expression)
 
-        self.xmin_spinbox.set(self.plotter.xmin)
+        self.value_spinbox.set(self.plotter.xmin)
     def editXmax(self):
         dialog = ctk.CTkInputDialog(
             text=f"Type in a value.", 
@@ -211,8 +171,33 @@ class GraphWidgets():
         self.plotter.xmax = new_xmax
         self.plotter.updateplot(self.plotter.expression)
 
-        self.xmax_spinbox.set(self.plotter.xmax)
+        self.value_spinbox.set(self.plotter.xmax)
 
+
+class ExpressionWidgets():
+    def __init__(self, frame, plotter):
+        self.plotter = plotter
+        
+
+        self.text_frame = ctk.CTkFrame(master=frame)
+        self.label = ctk.CTkLabel(
+            master=self.text_frame,
+            text=f"y = {plotter.expression}",
+            font=ctk.CTkFont(size=20, weight="bold")
+        )
+        self.label.pack(padx=10, pady=10)
+        self.text_frame.grid(row=0, padx=10, pady=20)
+
+
+
+        # edit expression
+        self.button = ctk.CTkButton(
+            master=frame, 
+            text="Edit expression", 
+            command=self.editEquation,
+            border_width=3
+        )
+        self.button.grid(row=0, column=1, padx=10)
 
 
 
@@ -267,7 +252,9 @@ class AppearanceWidgets:
 
 
 
-        self.appearance_mode = ctk.CTkOptionMenu(frame, values=["System", "Dark", "Light"])
+        self.appearance_mode = ctk.CTkOptionMenu(frame,
+                                                  values=["System", "Dark", "Light"],
+                                                  command=self.setAppearance)
         self.appearance_mode.grid(row=0, column=1, padx=10, pady=10)
 
     def setGrid(self):
