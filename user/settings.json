@@ -1,15 +1,1 @@
-{
-	"expression" : "x",
-	
-	"graphvalues" : {
-		"xmin" : -100,
-		"xmax" : 100,
-		"ymin" : 0,
-		"ymax" : 1000
-	},
-	
-	"appearance" : {
-		"theme" : "system",
-		"grid" : true
-	}
-}
+{"expression": "x", "graphvalues": {"xmin": -100.0, "xmax": 100, "ymin": 0, "ymax": 1000}, "appearance": {"theme": "system", "grid": true}}

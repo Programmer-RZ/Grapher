@@ -1,0 +1,16 @@
+EXPRESSION FORMAT:
+    addition =       +
+    subtraction =    -
+    multiplication = *
+    division =       /
+    power =         **
+    parentheses =   ()
+
+    
+
+GRAPH VALUES:
+    Left X =   minimum X value in graph
+    Right X =  maximum X value in graph
+
+    Bottom Y = minimum Y value in graph
+    Up Y =     maximum Y value in graph

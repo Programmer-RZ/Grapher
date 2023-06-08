@@ -1,6 +1,9 @@
 import json
 
-def readJson(data):
+def readJson():
+	with open("user/settings.json", "r") as settings:
+		data = json.load(settings)
+
 	expression = data["expression"]
 
 	xmin = data["graphvalues"]["xmin"]
@@ -13,8 +16,22 @@ def readJson(data):
 
 	return (expression, xmin, xmax, ymin, ymax, theme, grid)
 
-def openJson():
-	with open("user/settings.json", "r") as settings:
-		data = json.load(settings)
-	
-	return data
+def writeJson(expression, xmin, xmax, ymin, ymax, theme, grid):
+	settings = {
+		"expression" : expression,
+
+		"graphvalues" : {
+			"xmin" : xmin,
+			"xmax" : xmax,
+			"ymin" : ymin,
+			"ymax" : ymax
+		},
+
+		"appearance" : {
+			"theme" : theme,
+			"grid" : grid
+		}
+	}
+
+	with open("user/settings.json", "w") as outfile:
+		json.dump(settings, outfile)

@@ -2,16 +2,16 @@ import customtkinter as ctk
 from plotter import ExpressionPlotter
 from widgets import WidgetFrame
 
-from settings import openJson, readJson
+from settings import readJson
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        data = openJson()
-        expression, xmin, xmax, ymin, ymax, theme, grid = readJson(data)
+        expression, xmin, xmax, ymin, ymax, theme, grid = readJson()
 
-        ctk.set_appearance_mode(theme)
+        self.theme = theme
+        ctk.set_appearance_mode(self.theme)
         ctk.ThemeManager.load_theme("blue")
 
         self.title("Grapher")

@@ -1,5 +1,8 @@
+from typing import Optional, Tuple, Union
 import customtkinter as ctk
 from customwidgets.spinbox import FloatSpinbox
+
+from settings import writeJson
 
 class WidgetFrame(ctk.CTkFrame):
     def __init__(self, window):
@@ -8,11 +11,18 @@ class WidgetFrame(ctk.CTkFrame):
         self.exprWidgetFrame = ExpressionWidgetFrame(self, window)
         self.exprWidgetFrame.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
 
+
         self.graphValuesFrame = GraphValuesWidgetFrame(self, window)
         self.graphValuesFrame.grid(row=1, column=0, padx=10, pady=10, sticky="EWNS")
 
+
         self.appearanceWidgetFrame = AppearanceWidgetFrame(self, window)
         self.appearanceWidgetFrame.grid(row=2, column=0, padx=10, pady=10, sticky="EWNS")
+
+
+        self.otherwidgetsFrame = OthersWidgetFrame(self, window)
+        self.otherwidgetsFrame.grid(row=3, column=0, padx=10, pady=10, sticky="EWNS")
+
 
 class ExpressionWidgetFrame(ctk.CTkFrame):
     def __init__(self, window, MAIN_WINDOW):
@@ -28,6 +38,12 @@ class GraphValuesWidgetFrame(ctk.CTkFrame):
     def __init__(self, window, MAIN_WINDOW):
         super().__init__(window)
         self.graphvalueWIdget = GraphValuesWidgets(self, MAIN_WINDOW.expressionplotter)
+
+class OthersWidgetFrame(ctk.CTkFrame):
+    def __init__(self, window, MAIN_WINDOW):
+        super().__init__(window)
+
+        self.otherwidgets = OtherWidgets(self, MAIN_WINDOW.expressionplotter, MAIN_WINDOW)
 
 class GraphValuesWidgets():
     def __init__(self, frame, plotter):
@@ -188,7 +204,7 @@ class ExpressionWidgets():
             font=ctk.CTkFont(size=20, weight="bold")
         )
         self.label.pack(padx=10, pady=10)
-        self.text_frame.grid(row=0, padx=10, pady=20)
+        self.text_frame.grid(row=0, column=0, padx=10, pady=20)
 
 
 
@@ -263,3 +279,42 @@ class AppearanceWidgets:
         self.plotter.updateplot(self.plotter.expression)
     def setAppearance(self, choice):
         ctk.set_appearance_mode(choice.lower())
+    
+
+
+class OtherWidgets:
+    def __init__(self, frame, plotter, MAIN_WINDOW):
+
+        self.saveSettings = ctk.CTkButton(frame, text="Save Settings", 
+                                          command=lambda : writeJson(
+            plotter.expression,
+            plotter.xmin,
+            plotter.xmax,
+            plotter.ymin,
+            plotter.ymax,
+            MAIN_WINDOW.theme,
+            plotter.haveGrid
+            )
+                                          )
+        self.saveSettings.grid(row=0, column=0, padx=10, pady=10)
+
+
+        self.helpButton = ctk.CTkButton(frame, text="Help", command=lambda : self.showHelptxt(MAIN_WINDOW))
+        self.helpButton.grid(row=0, column=1, padx=10, pady=10)
+    
+    def showHelptxt(self, MAIN_WINDOW):
+        helpWindow = ctk.CTkToplevel(MAIN_WINDOW    )
+        helpWindow.attributes("-topmost", True)
+        helpWindow.title("Help")
+        helpWindow.geometry("500x500")
+
+        helptxt = ""
+
+        with open("user/help.txt", "r") as helpfile:
+            helptxt = helpfile.read()
+        
+        textbox = ctk.CTkTextbox(helpWindow, width=480, height=480)
+        textbox.insert("0.0", helptxt)
+        textbox.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
+
+        textbox.configure(state="disabled")
