@@ -21,19 +21,25 @@ class GraphFrame(ctk.CTkFrame):
         self.canvas.get_tk_widget().pack()
 
 class ExpressionPlotter:
-    def __init__(self, window):
+    def __init__(self, window, 
+                 expression="x", 
+                 xmin=-100, 
+                 xmax=100, 
+                 ymin=0, 
+                 ymax=1000,
+                 grid=True):
         self.x = []
         self.y = []
-        self.expression = "x"
+        self.expression = expression
 
-        self.xmin = -100
-        self.xmax = 100
+        self.xmin = xmin
+        self.xmax = xmax
 
-        self.ymin = 0
-        self.ymax = 1000
+        self.ymin = ymin
+        self.ymax = ymax
 
 
-        self.haveGrid = True
+        self.haveGrid = grid
 
         self.fig = Figure(figsize = (10, 5), dpi=100)
         self.ax1 = self.fig.add_subplot(1, 1, 1)

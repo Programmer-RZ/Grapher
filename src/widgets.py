@@ -33,14 +33,16 @@ class GraphValuesWidgets():
     def __init__(self, frame, plotter):
         self.plotter = plotter
 
+        # option menu
         self.editValue = ctk.CTkOptionMenu(frame, values=
                                            ["Left X", "Right X", "Bottom Y", "Top Y"],
                                            command=self.setEditValue)
         self.editValue.grid(row=0, column=0, padx=10, pady=10)
 
-        
+        # label
         self.valueLabel = ctk.CTkLabel(master=frame, text="Editing value Left X")
         self.valueLabel.grid(row=0, column=1, padx=10)
+
 
         # default value
         self.valueButton = ctk.CTkButton(
@@ -50,6 +52,7 @@ class GraphValuesWidgets():
             width=100,
         )
         self.valueButton.grid(row=1, column=0, padx=10, pady=10)
+
 
         # default value
         self.value_spinbox = FloatSpinbox(frame, 

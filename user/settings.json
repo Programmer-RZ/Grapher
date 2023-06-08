@@ -8,7 +8,7 @@
 		"ymax" : 1000
 	},
 	
-	"apperance" : {
+	"appearance" : {
 		"theme" : "system",
 		"grid" : true
 	}
