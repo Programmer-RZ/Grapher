@@ -1,7 +1,7 @@
 import json
 
 def readJson():
-	with open("user/settings.json", "r") as settings:
+	with open("../user/settings.json", "r") as settings:
 		data = json.load(settings)
 
 	expression = data["expression"]
@@ -33,5 +33,5 @@ def writeJson(expression, xmin, xmax, ymin, ymax, theme, grid):
 		}
 	}
 
-	with open("user/settings.json", "w") as outfile:
+	with open("../user/settings.json", "w") as outfile:
 		json.dump(settings, outfile)

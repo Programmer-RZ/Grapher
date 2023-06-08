@@ -308,12 +308,15 @@ class OtherWidgets:
         helpWindow.title("Help")
         helpWindow.geometry("500x500")
 
+        helpWindow.rowconfigure(0, weight=1)
+        helpWindow.columnconfigure(0, weight=1)
+
         helptxt = ""
 
-        with open("user/help.txt", "r") as helpfile:
+        with open("../user/help.txt", "r") as helpfile:
             helptxt = helpfile.read()
         
-        textbox = ctk.CTkTextbox(helpWindow, width=480, height=480)
+        textbox = ctk.CTkTextbox(helpWindow)
         textbox.insert("0.0", helptxt)
         textbox.grid(row=0, column=0, padx=10, pady=10, sticky="EWNS")
 
