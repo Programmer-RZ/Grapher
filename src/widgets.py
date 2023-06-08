@@ -98,7 +98,7 @@ class GraphValuesWidgets():
             self.value_spinbox.command = lambda : self.setYmin(self.value_spinbox)
             self.value_spinbox.set(self.plotter.ymin)
 
-        elif choice == "Up Y":
+        elif choice == "Top Y":
             self.valueButton.configure(text="Edit up Y", command=self.editYmax)
 
             self.value_spinbox.command = lambda : self.setYmax(self.value_spinbox)
