@@ -228,29 +228,10 @@ class ExpressionWidgets():
 
         if new_expression == None:
             return
-
-        # lowercase the whole expression
-        new_expression.lower()
-
-        if "x" not in new_expression:
-            return
         
-        # check no consecutive letters
-        isLetter = False
-        for symbol in new_expression:
-            if symbol.lower().isalpha():
-                if isLetter:
-                    # previous letter was letter
-                    # it's consecutive
-                    return
-                else:
-                    isLetter = True
-            else:
-                isLetter = False
-
         # all requirements match up
         self.plotter.updateplot(new_expression)
-        self.label.configure(text=f"y = {new_expression}")
+        self.label.configure(text=f"y = {self.plotter.expression}")
 
 class AppearanceWidgets:
     def __init__(self, frame, plotter):

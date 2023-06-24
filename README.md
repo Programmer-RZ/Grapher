@@ -11,3 +11,4 @@ Written entirely in Python.
 # Requirements
 - Tkinter
 - Matplotlib
+- Numpy

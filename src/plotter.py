@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
 NavigationToolbar2Tk)
 
 from numpy import arange
+from re import sub
 
 class GraphFrame(ctk.CTkFrame):
     def __init__(self, window, fig):
@@ -52,7 +53,6 @@ class ExpressionPlotter:
     def updateplot(self, expression):
         self.x = arange(self.xmin, self.xmax, 1)
         self.updateExpression(expression)
-        self.y = self.y
 
         self.fig.clear()
 
@@ -69,10 +69,16 @@ class ExpressionPlotter:
 
     def updateExpression(self, expression):
         try:
+            # sanitize the expression
+            allowed_chars = r"[0-9+\-*/()x\s]"
+            if sub(allowed_chars, '', expression):
+                raise ValueError("Invalid characters")
+
             x = self.x
             self.y = eval(expression)
             self.expression = expression
-        except SyntaxError:
-            pass
+
+        except Exception as e:
+            print(f"Invalid expression: {repr(e)}")
 
 
