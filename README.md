@@ -9,6 +9,5 @@ Written entirely in Python.
 - Move and zoom in/out graph
 
 # Requirements
-- Tkinter
+- CustomTkinter
 - Matplotlib
-- Numpy
