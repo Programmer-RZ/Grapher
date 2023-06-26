@@ -1,5 +1,9 @@
 import customtkinter
 
+'''
+Credits: https://customtkinter.tomschimansky.com/tutorial/spinbox
+'''
+
 class FloatSpinbox(customtkinter.CTkFrame):
     def __init__(self, *args,
                  width: int = 100,
