@@ -11,12 +11,11 @@ def readJson():
 	ymin = data["graphvalues"]["ymin"]
 	ymax = data["graphvalues"]["ymax"]
 
-	theme = data["appearance"]["theme"]
 	grid = data["appearance"]["grid"]
 
-	return (expression, xmin, xmax, ymin, ymax, theme, grid)
+	return (expression, xmin, xmax, ymin, ymax, grid)
 
-def writeJson(expression, xmin, xmax, ymin, ymax, theme, grid):
+def writeJson(expression, xmin, xmax, ymin, ymax, grid):
 	settings = {
 		"expression" : expression,
 
@@ -28,7 +27,6 @@ def writeJson(expression, xmin, xmax, ymin, ymax, theme, grid):
 		},
 
 		"appearance" : {
-			"theme" : theme,
 			"grid" : grid
 		}
 	}

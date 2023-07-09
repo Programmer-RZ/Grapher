@@ -8,11 +8,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        expression, xmin, xmax, ymin, ymax, theme, grid = readJson()
-
-        self.theme = theme
-        ctk.set_appearance_mode(self.theme)
-        ctk.ThemeManager.load_theme("blue")
+        expression, xmin, xmax, ymin, ymax, grid = readJson()
 
         self.title("Grapher")
         self.geometry("1200x500")
